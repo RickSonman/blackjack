@@ -63,7 +63,6 @@ int Card::getCardValue() const
 
 Deck::Deck():m_deck_index(0)
 {
-    // Конечно, можно было бы инициализировать каждую карту отдельно, но зачем? Ведь есть циклы!
     int card = 0;
     for (int suit = 0; suit < (int)Card::CardSuit::MAX_SUITS; ++suit)
         for (int rank = 0; rank < (int)Card::CardRank::MAX_RANKS; ++rank)
@@ -98,23 +97,23 @@ void Deck::swapCard(Card& a, Card& b)
     b = temp;
 }
 
-// Генерируем случайное число между min и max (включительно).
-// Предполагается, что srand() уже был вызван
+// Р“РµРЅРµСЂРёСЂСѓРµРј СЃР»СѓС‡Р°Р№РЅРѕРµ С‡РёСЃР»Рѕ РјРµР¶РґСѓ min Рё max (РІРєР»СЋС‡РёС‚РµР»СЊРЅРѕ).
+// РџСЂРµРґРїРѕР»Р°РіР°РµС‚СЃСЏ, С‡С‚Рѕ srand() СѓР¶Рµ Р±С‹Р» РІС‹Р·РІР°РЅ
 int Deck::getRandomNumber(int min, int max)
 {
-    static const double fraction = 1.0 / (static_cast<double>(RAND_MAX) + 1.0); // используем static, так как это значение нужно вычислить единожды
-    // Равномерно распределяем вычисление значения из нашего диапазона
+    static const double fraction = 1.0 / (static_cast<double>(RAND_MAX) + 1.0); 
+    // Р Р°РІРЅРѕРјРµСЂРЅРѕ СЂР°СЃРїСЂРµРґРµР»СЏРµРј РІС‹С‡РёСЃР»РµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ РёР· РЅР°С€РµРіРѕ РґРёР°РїР°Р·РѕРЅР°
     return static_cast<int>(rand() * fraction * (max - min + 1) + min);
 }
 
 void Deck::shuffleDeck()
 {
-    // Перебираем каждую карту в колоде
+    // РџРµСЂРµР±РёСЂР°РµРј РєР°Р¶РґСѓСЋ РєР°СЂС‚Сѓ РІ РєРѕР»РѕРґРµ
     for (int index = 0; index < 52; ++index)
     {
-        // Выбираем любую случайную карту
+        // Р’С‹Р±РёСЂР°РµРј Р»СЋР±СѓСЋ СЃР»СѓС‡Р°Р№РЅСѓСЋ РєР°СЂС‚Сѓ
         int swapIndex = Deck::getRandomNumber(0, 51);
-        // Меняем местами с нашей текущей картой
+        // РњРµРЅСЏРµРј РјРµСЃС‚Р°РјРё СЃ РЅР°С€РµР№ С‚РµРєСѓС‰РµР№ РєР°СЂС‚РѕР№
         Deck::swapCard(m_deck[index], m_deck[swapIndex]);
     }
     m_deck_index = 0;
@@ -143,15 +142,14 @@ bool Deck::playBlackjack(Deck &deck)
     int playerTotal = 0;
     int dealerTotal = 0;
 
-    // Дилер получает одну карту
+    // Р”РёР»РµСЂ РїРѕР»СѓС‡Р°РµС‚ РѕРґРЅСѓ РєР°СЂС‚Сѓ
     dealerTotal += deck.dealCard().getCardValue();
     std::cout << "The dealer is showing: " << dealerTotal << '\n';
 
-    // Игрок получает две карты
+    // РРіСЂРѕРє РїРѕР»СѓС‡Р°РµС‚ РґРІРµ РєР°СЂС‚С‹
     playerTotal += deck.dealCard().getCardValue();
     playerTotal += deck.dealCard().getCardValue();
 
-    // Игрок начинает
     while (1)
     {
         std::cout << "You have: " << playerTotal << '\n';
@@ -161,19 +159,19 @@ bool Deck::playBlackjack(Deck &deck)
 
         playerTotal += deck.dealCard().getCardValue();
 
-        // Смотрим, не проиграл ли игрок
+        // Р•СЃР»Рё РёРіСЂРѕРє РїСЂРѕРіСЂР°Р», С‚Рѕ
         if (playerTotal > 21)
             return false;
     }
 
-    // Если игрок не проиграл (у него не больше 21 очка), тогда дилер получает карты до тех пор, пока у него в сумме будет не меньше 17 очков
+    // Р•СЃР»Рё РёРіСЂРѕРє РЅРµ РїСЂРѕРёРіСЂР°Р» (Сѓ РЅРµРіРѕ РЅРµ Р±РѕР»СЊС€Рµ 21 РѕС‡РєР°), С‚РѕРіРґР° РґРёР»РµСЂ РїРѕР»СѓС‡Р°РµС‚ РєР°СЂС‚С‹ РґРѕ С‚РµС… РїРѕСЂ, РїРѕРєР° Сѓ РЅРµРіРѕ РІ СЃСѓРјРјРµ Р±СѓРґРµС‚ РЅРµ РјРµРЅСЊС€Рµ 17 РѕС‡РєРѕРІ
     while (dealerTotal < 17)
     {
         dealerTotal += deck.dealCard().getCardValue();
         std::cout << "The dealer now has: " << dealerTotal << '\n';
     }
 
-    // Если у дилера больше 21, то он проиграл, а игрок выиграл
+    // Р•СЃР»Рё Сѓ РґРёР»РµСЂР° Р±РѕР»СЊС€Рµ 21, С‚Рѕ РѕРЅ РїСЂРѕРёРіСЂР°Р», Р° РёРіСЂРѕРє РІС‹РёРіСЂР°Р»
     if (dealerTotal > 21)
         return true;
 
