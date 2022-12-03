@@ -1,13 +1,13 @@
 #include <iostream>
 #include <array>
-#include <ctime> // для time()
-#include <cstdlib> // для rand() и srand()
+#include <ctime> 
+#include <cstdlib> 
 #include "Card.h"
 
 int main()
 {
-	srand(static_cast<unsigned int>(time(0))); // используем системные часы в качестве стартового значения
-	rand(); // пользователям Visual Studio: делаем сброс первого случайного числа
+	srand(static_cast<unsigned int>(time(0))); // РёСЃРїРѕР»СЊР·СѓРµРј СЃРёСЃС‚РµРјРЅС‹Рµ С‡Р°СЃС‹ РІ РєР°С‡РµСЃС‚РІРµ СЃС‚Р°СЂС‚РѕРІРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ
+	rand(); 
 
 	Deck deck;
 
